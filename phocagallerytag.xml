@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="finder" method="upgrade" version="4.0">
+	<name>plg_finder_phocagallerytag</name>
+	<author>ConseilGouz</author>
+	<creationDate>2023/04/04</creationDate>
+	<authorEmail></authorEmail>
+	<authorUrl>https://www.conseilgouz.com</authorUrl>
+	<copyright>Jan Pavelka</copyright>
+	<license>GNU/GPL</license>
+	<version>1.0.0</version>
+	<description>PLG_FINDER_PHOCAGALLERYTAG_DESCRIPTION</description>
+	<projectName>PhocaGalleryFinderPlugin</projectName>
+	<scriptfile>script.php</scriptfile>
+	<changelogurl>https://raw.githubusercontent.com/conseilgouz/plg_finder_phocagallerytag_j4/master/plg_finder_phocagallerytag_changelog.xml</changelogurl>
+	<files>
+		<filename>index.html</filename>
+		<filename plugin="phocagallerytag">phocagallerytag.php</filename>
+		<filename>phocagallerytag.xml</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/plg_finder_phocagallerytag.ini</language>
+		<language tag="en-GB">language/en-GB/plg_finder_phocagallerytag.sys.ini</language>
+	</languages>
+	<config>
+	<fields name="params">
+		<fieldset name="basic">
+		</fieldset>
+	</fields>
+	</config>
+	<updateservers>
+		<server type="extension" name="PLG_FINDER_PHOCAGALLERYIMAGE" priority="1">https://raw.githubusercontent.com/conseilgouz/updates_github/master/plg_finder_phocagallerytag_update.xml</server>
+	</updateservers>
+</extension>

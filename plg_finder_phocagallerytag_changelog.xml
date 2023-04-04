@@ -1,0 +1,14 @@
+<changelogs>
+	<changelog>
+		<element>phocagallerytag</element>
+		<type>plugin</type>
+		<group>finder</group>
+		<version>1.0.0</version>
+        <note>
+            <item>Update : 04/04/2023</item>
+        </note>
+         <addition>
+            <item>New Joomla 4 finder plugin</item>
+        </addition>
+	</changelog>
+</changelogs>
