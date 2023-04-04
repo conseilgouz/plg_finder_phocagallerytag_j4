@@ -65,6 +65,15 @@ class plgfinderphocagallerytagInstallerScript
 		return true;
     }
 	private function postinstall_cleanup() {
+		$obsloteFiles = ["phocagallerytag.php"];
+		foreach ($obsloteFiles as $file)
+		{
+			$f = JPATH_SITE . '/plugins/finder/'.$this->extname.'/' . $file;
+			if (@is_file($f))
+			{
+				File::delete($f);
+			}
+		}
 
 		$db = Factory::getDbo();
         $conditions = array(

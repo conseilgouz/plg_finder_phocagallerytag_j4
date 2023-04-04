@@ -7,15 +7,16 @@
 	<authorUrl>https://www.conseilgouz.com</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
-	<version>1.0.0</version>
+	<version>2.0.0</version>
 	<description>PLG_FINDER_PHOCAGALLERYTAG_DESCRIPTION</description>
 	<projectName>PhocaGalleryFinderPlugin</projectName>
 	<scriptfile>script.php</scriptfile>
+	<namespace path="src">Phoca\Plugin\Finder\PhocaGalleryTag</namespace>
 	<changelogurl>https://raw.githubusercontent.com/conseilgouz/plg_finder_phocagallerytag_j4/master/plg_finder_phocagallerytag_changelog.xml</changelogurl>
 	<files>
 		<filename>index.html</filename>
-		<filename plugin="phocagallerytag">phocagallerytag.php</filename>
-		<filename>phocagallerytag.xml</filename>
+		<folder plugin="phocagallerytag">services</folder>
+		<folder>src</folder>	
 	</files>
 	<languages>
 		<language tag="en-GB">language/en-GB/plg_finder_phocagallerytag.ini</language>

@@ -6,10 +6,12 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
+namespace Phoca\Plugin\Finder\PhocaGalleryTag\Extension;
 
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\Database\DatabaseAwareTrait;
 use Joomla\Database\DatabaseQuery;
-use Joomla\CMS\Factory;
+use Joomla\Registry\Registry;
 use Joomla\Component\Finder\Administrator\Indexer\Adapter;
 use Joomla\Component\Finder\Administrator\Indexer\Helper;
 use Joomla\Component\Finder\Administrator\Indexer\Indexer;
@@ -17,13 +19,16 @@ use Joomla\Component\Finder\Administrator\Indexer\Result;
 
 defined('JPATH_BASE') or die;
 
-class PlgFinderPhocagalleryTag extends Adapter
+final class PhocaGalleryTag extends Adapter
 {
-	protected $context 			= 'PhocagalleryTags';
+    use DatabaseAwareTrait;
+	
+	protected $context 			= 'PhocagalleryTag';
 	protected $extension 		= 'com_phocagallery';
 	protected $layout 			= 'category';
 	protected $type_title 		= 'Phoca Gallery Images';
 	protected $table 			= '#__phocagallery';
+	protected $state_field      = 'published';
 	protected $autoloadLanguage = true;
 
 
@@ -35,7 +40,7 @@ class PlgFinderPhocagalleryTag extends Adapter
 		}
 	}
 
-	public function onFinderAfterDelete($context, $table)
+	public function onFinderAfterDelete($context, $table): void
 	{
 		if ($context == 'com_phocagallery.phocagallerytag')
 		{
@@ -47,13 +52,13 @@ class PlgFinderPhocagalleryTag extends Adapter
 		}
 		else
 		{
-			return true;
+			return;
 		}
 		// Remove the items.
-		return $this->remove($id);
+		$this->remove($id);
 	}
 
-	public function onFinderAfterSave($context, $row, $isNew)
+	public function onFinderAfterSave($context, $row, $isNew): void
 	{
 		// We only want to handle web links here. We need to handle front end and back end editing.
 		if ($context == 'com_phocagallery.phocagallerytag' || $context == 'com_phocagallery.tag' )
@@ -68,7 +73,6 @@ class PlgFinderPhocagalleryTag extends Adapter
 			// Reindex the item
 			$this->reindex($row->id);
 		}
-		return true;
 	}
 
 
@@ -113,42 +117,28 @@ class PlgFinderPhocagalleryTag extends Adapter
 	}
 
 
-	protected function index(FinderIndexerResult $item, $format = 'html')
+	protected function index(Result $item)
 	{
 		// Check if the extension is enabled
-		if (JComponentHelper::isEnabled($this->extension) == false)
+		if (ComponentHelper::isEnabled($this->extension) == false)
 		{
 			return;
 		}
 
 
-        if (!JComponentHelper::isEnabled('com_phocagallery', true)) {
+        if (!ComponentHelper::isEnabled('com_phocagallery', true)) {
             echo '<div class="alert alert-danger">Phoca Gallery Error: Phoca Gallery component is not installed or not published on your system</div>';
             return;
         }
 
-        if (!class_exists('PhocaGalleryLoader')) {
-            require_once( JPATH_ADMINISTRATOR.'/components/com_phocagallery/libraries/loader.php');
-        }
-
-        phocagalleryimport('phocagallery.path.path');
-        phocagalleryimport('phocagallery.path.route');
-        phocagalleryimport('phocagallery.library.library');
-        phocagalleryimport('phocagallery.text.text');
-        phocagalleryimport('phocagallery.access.access');
-        phocagalleryimport('phocagallery.file.file');
-        phocagalleryimport('phocagallery.file.filethumbnail');
-
-
-
 		$item->setLanguage();
 
 		// Initialize the item parameters.
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($item->params);
 		$item->params = $registry;
 
-		$registry = new JRegistry;
+		$registry = new Registry;
 		$registry->loadString($item->metadata);
 		$item->metadata = $registry;
 
@@ -161,12 +151,12 @@ class PlgFinderPhocagalleryTag extends Adapter
 		$item->metaauthor = $item->metadata->get('author');
 
 		// Handle the link to the meta-data.
-		$item->addInstruction(FinderIndexer::META_CONTEXT, 'link');
-		$item->addInstruction(FinderIndexer::META_CONTEXT, 'metakey');
-		$item->addInstruction(FinderIndexer::META_CONTEXT, 'metadesc');
-		$item->addInstruction(FinderIndexer::META_CONTEXT, 'metaauthor');
-		$item->addInstruction(FinderIndexer::META_CONTEXT, 'author');
-		$item->addInstruction(FinderIndexer::META_CONTEXT, 'created_by_alias');
+		$item->addInstruction(Indexer::META_CONTEXT, 'link');
+		$item->addInstruction(Indexer::META_CONTEXT, 'metakey');
+		$item->addInstruction(Indexer::META_CONTEXT, 'metadesc');
+		$item->addInstruction(Indexer::META_CONTEXT, 'metaauthor');
+		$item->addInstruction(Indexer::META_CONTEXT, 'author');
+		$item->addInstruction(Indexer::META_CONTEXT, 'created_by_alias');
 
 		// Add the type taxonomy data.
 		$item->addTaxonomy('Type', 'Phoca Gallery Tags');
@@ -180,7 +170,7 @@ class PlgFinderPhocagalleryTag extends Adapter
 		$item->addTaxonomy('Language', $item->language);
 
 		// Get content extras.
-		FinderIndexerHelper::getContentExtras($item);
+		Helper::getContentExtras($item);
 
 		// Index the item.
 		$this->indexer->index($item);
@@ -188,15 +178,14 @@ class PlgFinderPhocagalleryTag extends Adapter
 
 	protected function setup()
 	{
-		require_once JPATH_SITE . '/administrator/components/com_phocagallery/libraries/phocagallery/path/route.php';
 		return true;
 	}
 
 	protected function getListQuery($query = null)
 	{
-		$db = Factory::getDbo();
+	    $db = $this->getDatabase();
 		// Check if we can use the supplied SQL query.
-		$query = $query instanceof JDatabaseQuery ? $query : $db->getQuery(true)
+		$query = $query instanceof DatabaseQuery ? $query : $db->getQuery(true)
 			->select('a.id, a.link_cat as catid, a.title, a.alias, "" AS link, a.description AS summary')
 			->select('"" as metakey, "" as metadesc, "" as metadata, a.language, a.ordering')
 			->select('"" AS created_by_alias, "" AS modified, "" AS modified_by')
@@ -214,34 +203,6 @@ class PlgFinderPhocagalleryTag extends Adapter
 		$query->select($case_when_item_alias)
 			->from('#__phocagallery_tags AS a')
 			->where('a.published = 1');// todo
-		return $query;
-	}
-
-	protected function getUpdateQueryByTime($time)
-	{
-		// Build an SQL query based on the modified time.
-		$query = $this->db->getQuery(true)
-			->where('a.date >= ' . $this->db->quote($time));
-
-		return $query;
-	}
-
-	protected function getStateQuery()
-	{
-		$query = $this->db->getQuery(true);
-
-		// Item ID
-		$query->select('a.id');
-
-		// Item and category published state
-		//$query->select('a.' . $this->state_field . ' AS state, c.published AS cat_state');
-		$query->select('a.published AS state, c.published AS cat_state');
-		// Item and category access levels
-		//$query->select(' a.access, c.access AS cat_access')
-		$query->select(' c.access AS cat_access')
-			->from($this->table . ' AS a')
-			->join('LEFT', '#__phocagallery_categories AS c ON c.id = a.link_cat');
-
 		return $query;
 	}
 }
