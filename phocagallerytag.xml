@@ -28,6 +28,6 @@
 	</fields>
 	</config>
 	<updateservers>
-		<server type="extension" name="PLG_FINDER_PHOCAGALLERYIMAGE" priority="1">https://raw.githubusercontent.com/conseilgouz/updates_github/master/plg_finder_phocagallerytag_update.xml</server>
+		<server type="extension" name="PLG_FINDER_PHOCAGALLERYTAG" priority="1">https://raw.githubusercontent.com/conseilgouz/updates_github/master/plg_finder_phocagallerytag_update.xml</server>
 	</updateservers>
 </extension>
