@@ -1,11 +1,9 @@
 <?php
 
 /**
- * @package     Joomla.Plugin
- * @subpackage  Finder.categories
- *
- * @copyright   (C) 2023 Open Source Matters, Inc. <https://www.joomla.org>
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * Finder.PhocaGalleryTags 
+ * copyright 		: Copyright (C) 2023 ConseilGouz. All rights reserved.
+ * license    		: http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  */
 
 defined('_JEXEC') or die;
@@ -42,7 +40,6 @@ return new class () implements ServiceProviderInterface {
                 );
                 $plugin->setApplication(Factory::getApplication());
                 $plugin->setDatabase($container->get(DatabaseInterface::class));
-
                 return $plugin;
             }
         );

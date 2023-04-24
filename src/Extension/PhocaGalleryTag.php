@@ -1,11 +1,8 @@
 <?php
-/* @package Joomla
- * @copyright Copyright (C) Open Source Matters. All rights reserved.
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
- * @extension Phoca Extension
- * @copyright Copyright (C) Jan Pavelka www.phoca.cz
- * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
- */
+/* Plugin PhocaGalleryTag Finder
+ * copyright 		: Copyright (C) 2023 ConseilGouz. All rights reserved.
+ * license    		: http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+*/
 namespace Phoca\Plugin\Finder\PhocaGalleryTag\Extension;
 
 use Joomla\CMS\Component\ComponentHelper;
@@ -16,7 +13,7 @@ use Joomla\Component\Finder\Administrator\Indexer\Adapter;
 use Joomla\Component\Finder\Administrator\Indexer\Helper;
 use Joomla\Component\Finder\Administrator\Indexer\Indexer;
 use Joomla\Component\Finder\Administrator\Indexer\Result;
-
+use Joomla\Event\DispatcherInterface;
 defined('JPATH_BASE') or die;
 
 final class PhocaGalleryTag extends Adapter
@@ -31,6 +28,17 @@ final class PhocaGalleryTag extends Adapter
 	protected $state_field      = 'published';
 	protected $autoloadLanguage = true;
     protected $catid            = 0;
+     /**
+     * Constructor.
+     *
+     * @param   DispatcherInterface  $dispatcher  The dispatcher
+     * @param   array                $config      An optional associative array of configuration settings
+     *
+     * @since   4.2.0
+     */
+    public function __construct(DispatcherInterface $dispatcher, array $config) {
+        parent::__construct($dispatcher, $config);
+    }
 
 	public function onFinderCategoryChangeState($extension, $pks, $value)
 	{
@@ -117,10 +125,14 @@ final class PhocaGalleryTag extends Adapter
         $item->setLanguage();
 		// Initialize the item parameters.
 		$registry = new Registry;
-		$registry->loadString($item->params);
+		if (isset($item->params) {
+			$registry->loadString($item->params);
+		}
 		$item->params = $registry;
 		$registry = new Registry;
-		$registry->loadString($item->metadata);
+		if (isset($item->metadata)) {
+			$registry->loadString($item->metadata);
+		}
 		$item->metadata = $registry;
 		$this->catid = $item->catid;
 		// Build the necessary route and path information.
