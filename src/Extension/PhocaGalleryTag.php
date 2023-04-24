@@ -125,7 +125,7 @@ final class PhocaGalleryTag extends Adapter
         $item->setLanguage();
 		// Initialize the item parameters.
 		$registry = new Registry;
-		if (isset($item->params) {
+		if (isset($item->params)) {
 			$registry->loadString($item->params);
 		}
 		$item->params = $registry;
