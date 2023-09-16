@@ -67,25 +67,12 @@ final class PhocaGalleryTag extends Adapter
 		// We only want to handle web links here. We need to handle front end and back end editing.
 		if ($context == 'com_phocagallery.phocagallerytag' || $context == 'com_phocagallery.tag' 
 		||  $context == 'com_phocagallery.phocagalleryimg' || $context == 'com_phocagallery.img' ) {
-			// Check if the access levels are different
-			if (!$isNew && $this->old_access != $row->access) {
-				// Process the change.
-				$this->itemAccessChange($row);
-			}
 			// Reindex the item
 			$this->reindex($row->id);
 		}
 	}
 	public function onFinderBeforeSave($context, $row, $isNew)
 	{
-		// We only want to handle web links here
-		if ($context == 'com_phocagallery.phocagallerytag' || $context == 'com_phocagallery.tag' 
-		||  $context == 'com_phocagallery.phocagalleryimg' || $context == 'com_phocagallery.img' ) {
-			// Query the database for the old access level if the item isn't new
-			if (!$isNew) {
-				$this->checkItemAccess($row);
-			}
-		}
 		// Check for access levels from the category
 		if ($context == 'com_phocagallery.phocagallerycat') {
 			// Query the database for the old access level if the item isn't new

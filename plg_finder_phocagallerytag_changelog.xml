@@ -3,6 +3,19 @@
 		<element>phocagallerytag</element>
 		<type>plugin</type>
 		<group>finder</group>
+		<version>2.1.0</version>
+        <note>
+            <item>Update : 16/09/2023</item>
+        </note>
+         <fix>
+            <item>Fix unknow column access</item>
+			<item>Joomla 5.x compatibility</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>phocagallerytag</element>
+		<type>plugin</type>
+		<group>finder</group>
 		<version>2.0.3</version>
         <note>
             <item>Update : 24/04/2023</item>
